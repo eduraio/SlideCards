@@ -1,0 +1,57 @@
+.preview {
+    display: flex;
+    flex-direction: column;
+    background-color: #48cafe;
+    border-radius: 4px;
+    padding: 1rem;
+}
+
+.preview h3 {
+    background-color: #48cafe;
+    margin-bottom: 0.4rem;
+
+}
+
+.preview div {
+    background-color: #ffffff;
+    padding: 0.5rem;
+    border-radius: 5px;
+}
+
+.prEmail {
+    background-color: #f2f2f2 !important;
+    padding: 0.4rem !important;
+    border-radius: 4px !important;
+    font-size: 0.8rem;
+}
+
+.prChecklist input {
+    padding: 0.3rem;
+    vertical-align:middle;
+    border: 1px solid #202020;
+    border-radius: 4px;
+    background-color: #ffffff;
+}
+
+.prChecklist label{
+    font-size: 0.9rem;
+    margin-left: 0.2rem;
+    margin-right: 0.6rem;
+    vertical-align:middle;
+    background-color: #ffffff;
+}
+
+.prTagLabel {
+    padding: 0.2rem;
+    border-radius: 4px;
+
+    font-size: 0.8rem !important;
+
+    background-color: #ffffff;
+    border: 1px solid #202020;
+
+    margin: 0.3rem;
+
+    transition: all 0.2s;
+    word-wrap: break-word;
+}

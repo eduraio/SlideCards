@@ -1,9 +1,10 @@
-import './global.css'
-
+import './styles/global.css'
 import { insertData } from './api/connection'
+import {useState} from 'react';
 
-import { useState} from 'react';
+import { NewCardModal } from './components/newCard'
 
+// Array para inicializar estado dos checkbox
 const defaultOption = [
   {
     name: "Iniciado",
@@ -11,7 +12,7 @@ const defaultOption = [
   },
   {
     name: "Produzido",
-    status: false
+    status: false,
   },
   {
     name: "Revisado",
@@ -23,32 +24,42 @@ const defaultOption = [
 
 export function App() {
 
+  // estados finais
   const [ name, setName ] = useState('')
   const [ email, setEmail ] = useState('')
   const [ description, setDescription ] = useState('')
   const [ options, setOptions ] = useState(defaultOption)
   const [ selected, setSelected ] = useState('Planejamento')
   const [ tags, setTags ] = useState<string[]>([])
+
+  // estados de verificação
   const [ newTag, setNewTag] = useState('')
+  const [ invalidName, setInvalidName] = useState('*')
+  const [ invalidEmail, setInvalidEmail] = useState('*')
+  const [ processing, setProcessing] = useState('')
 
   function handleNewOption(e:any) {
 
+    // Inverte checked status dos checkbox
     const newOptionsArray = options.map(option => {
       if (option.name === e.target.name)
         option.status = !option.status
         
         return option
     })
-    console.log(newOptionsArray)
     setOptions(newOptionsArray)
   }
 
+  // adiciona novas Tags ao array, ignorando se estiver vazio ou repetido
   function handleTags() {
     if (newTag === '') return
-      setTags([...tags, newTag])
-      setNewTag('')
+    if (tags.includes(newTag)) return
+
+    setTags([...tags, newTag])
+    setNewTag('')
   }
 
+  // remove tag ao clicar nela
   function handleRemoveTag(e:any) {
     const newTagsArray = tags.filter(tag => tag !== e.target.firstChild.data)
     setTags(newTagsArray)
@@ -61,6 +72,7 @@ export function App() {
     setSelected('Planejamento')
     setTags([])
     setNewTag('')
+    setProcessing('')
 
     const newOptionsArray = options.map(option => {
         option.status = false
@@ -69,52 +81,102 @@ export function App() {
     setOptions(newOptionsArray)
   }
 
+  // validação dos campos obrigatorios ( Nome e email ) e verificação de formato de e-mail usando regex
+  function checkFields() {
+
+    if (name === '') {
+      const nameElement = window.document.getElementById("nameInput")!
+
+      if (nameElement !== null)
+        nameElement.style.border = "1px solid red"
+
+      setTimeout(() => { nameElement.style.border = "1px solid #202020"}, 5000);
+      setInvalidName('( Este campo é obrigatório )')
+      return false
+    }
+
+    const regexEmail = /^[a-z0-9.]+@[a-z0-9]+\.[a-z]+(\.[a-z]+)?$/i
+    const validEmail = regexEmail.test(email)
+
+    if (email === '') {
+      const nameElement = window.document.getElementById("emailInput")!
+
+      if (nameElement !== null)
+        nameElement.style.border = "1px solid red"
+      
+      setTimeout(() => { nameElement.style.border = "1px solid #202020" }, 5000);
+      setInvalidEmail('( Este campo é obrigatório )')
+      return false
+    } 
+    
+    else if (!validEmail) {
+        const nameElement = window.document.getElementById("emailInput")!
+
+        if (nameElement !== null)
+          nameElement.style.border = "1px solid red"
+        
+        setTimeout(() => { nameElement.style.border = "1px solid #202020" }, 5000);
+        setInvalidEmail('( E-mail inváido )')
+        return false
+    }
+    return true
+  }
+
   async function createNewCard(e:any) {
+    setProcessing('Enviando dados...')
     e.preventDefault()
+
+    const validateFields = checkFields()
+
+    if (!validateFields){
+      setProcessing('Por favor, verifique os campos obrigatórios.')
+      setTimeout(() => { setProcessing('') }, 3000);
+      return
+    }
+
     await insertData({name, email, description, options, selected, tags})
     resetStats()
-
   }
 
   return (
     <div className="container">
+
       <div className="header">
-        <h1>SlideCards</h1>
-        <span>Insira novas informações na sua lista do Trello.</span>
+        <div>
+          <h1>SlideCards</h1>
+          <span>Insira novas informações na <a target="_blanck" href="https://trello.com/b/XWaXCkAj/slidecards">lista do Trello.</a></span>
+        </div>
 
-        <br/>
-        <br/>
-        <span>Nome: {name}</span>
-        <br/>
-        <span>E-mail: {email}</span>
-        <br/>
-        <span>descrição: {description}</span>
-        <br/>
-        <span>Opções: {options[0].name} {String(options[0].status)}</span>
-        <br/>
-        <span>Selecionado: {selected}</span>
-        <br/>
-        <span>Tags: {tags.join(' ')}</span>
-        <br/>
-        <span>Nova TAG: {newTag}</span>
-
-
+        <div className="normalPreview">
+            <NewCardModal name={name} email={email} description={description} selected={selected} options={options} tags={tags} />
+          </div>
       </div>
 
-      <form action="" onSubmit={(e) => createNewCard(e)}>
+      <form action="" noValidate onSubmit={(e) => createNewCard(e)}>
 
-        <div className="right-content">
+        <div className="left-content">
 
-          <span>Nome</span>
-          <input type="text" value={name} placeholder="Nome" required onChange={(e) => setName(e.target.value)}/>
+          <span data-end={invalidName} >Nome </span>
 
-          <span>E-mail</span>
-          <input type="email" value={email} placeholder="E-mail" required onChange={(e) => setEmail(e.target.value)}/>
+          <input type="text" id="nameInput" value={name} placeholder="Nome" onChange={(e) => {
+            setName(e.target.value)
+            setInvalidName('*')
+          }}/>
+
+          <span data-end={invalidEmail}>E-mail </span>
+
+          <input id="emailInput" type="email" value={email} placeholder="E-mail" onChange={(e) => {
+            setEmail(e.target.value)
+            setInvalidEmail('*')
+          }}/>
+
+          <span>Descrição</span>
+
           <textarea placeholder="Escreva alguma coisa." value={description} onChange={(e) => setDescription(e.target.value)}></textarea>
 
         </div>
 
-        <div className="left-content">
+        <div className="right-content">
 
           <div className="checkboxs">
 
@@ -135,7 +197,7 @@ export function App() {
             </div>
           </div>
           
-          <span>Status</span>
+          <span>Status ( Selecione )</span>
           <select name="option" value={selected} onChange={(e) => setSelected(e.target.value)}>
             <option value="Planejamento">Planejamento</option>
             <option value="Produção">Produção</option>
@@ -155,7 +217,11 @@ export function App() {
               </div>
             </div>
           </div>
+          <div className="mbPreview">
+            <NewCardModal name={name} email={email} description={description} selected={selected} options={options} tags={tags} />
+          </div>
           <button className='submit-button'>Enviar</button>
+          <span>{processing}</span>
 
         </div>
       </form>

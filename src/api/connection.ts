@@ -1,9 +1,10 @@
 import axios from 'axios'
 
 const baseURL = 'https://api.trello.com/1/'
-const key= 'd76de3efaf05fb79eeedaa6eb0a19d94'
-const token= '0286fa41ae17503800eb868de0f30c02d1f722dd2d878c0185c35a75741986e9'
-const id = '605bf8c02b61d86f86c08191'
+
+const key= process.env.REACT_APP_KEY
+const token= process.env.REACT_APP_TOKEN
+const id = process.env.REACT_APP_ID
 
 interface optionsProps {
     name:string,
@@ -17,8 +18,6 @@ interface insertDataProps {
     selected:string,
     tags:string[]
 }
-
-//'https://api.trello.com/1/labels?key=&token=&name={name}&color={color}&idBoard={idBoard}'
 
 async function createLabels(labels:string[]) {
 
@@ -56,9 +55,9 @@ async function createCard(props:insertDataProps, listId:string) {
 
 async function addLabelToCard(cardId:string, labels:string[]) {
 
-    labels.forEach(async label => {
-        await axios.post(`${baseURL}cards/${cardId}/idLabels?key=${key}&token=${token}&value=${label}`).then( data => {})
-    })
+    for (let i = 0; i < labels.length; i++) {
+        await axios.post(`${baseURL}cards/${cardId}/idLabels?key=${key}&token=${token}&value=${labels[i]}`).then( data => console.log(data))
+    } 
 }
 
 async function createCheckList(cardId:string) {
@@ -70,12 +69,11 @@ async function createCheckList(cardId:string) {
     return response.id
 }
 
-//checklists/{id}/checkItems?key=&token=&name={name}&checked'
 
 async function addChecklistItens(checklistId:string, options:optionsProps[]) {
     options.forEach(async op => {
         console.log(op)
-        await axios.post(`${baseURL}checklists/${checklistId}/checkItems?key=${key}&token=${token}&name=${op.name}&checked=${op.status}&pos=bottom`).then( data => {})
+        await axios.post(`${baseURL}checklists/${checklistId}/checkItems?key=${key}&token=${token}&name=${op.name}&checked=${op.status}`).then( data => {})
     })
 }
 
@@ -89,6 +87,8 @@ export async function insertData(props:insertDataProps) {
         await addLabelToCard(cardId, labels)
     const checklistId = await createCheckList(cardId)
     await addChecklistItens(checklistId, props.options)
+
+    return true
 
 
     

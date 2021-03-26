@@ -1,3 +1,6 @@
+
+/* Estilização de TAGS */
+
 * {
     margin: 0;
     padding: 0;
@@ -16,19 +19,58 @@ h1 {
     color: #48cafe;
 }
 
+a {
+    text-decoration: none;
+    color: #3968fc;
+}
+
 span {
     margin-bottom: 0.4rem;
 }
 
+input {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
+
+span::after {
+    content: attr(data-end) ;
+    color: red ;
+}
+
+/*Estilização Header*/
+
+.header {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    align-content: center;
+    justify-content: space-between;
+}
+
+.normalPreview {
+    display: block;
+}
+
+.mbPreview {
+    display: none;
+
+    margin-top: 1rem;
+}
+
+/*Estilização Container*/
+
 .container {
     height: 100vh;
     max-width: 992px;
+    min-width: 350px;
     margin: 0 auto;
     padding: 2.5rem 2rem;
 
     display: flex;
     flex-direction: column;
 }
+
 
 .container form {
     flex: 1;
@@ -40,34 +82,42 @@ span {
     justify-content: center;
 }
 
-.right-content, .left-content {
+.req {
+    color: #ff0000;
+}
+
+.left-content, .right-content {
     display: flex;
     flex-direction: column;
 }
 
-.right-content input {
+/* Estilizando lado esquerdo do formulário*/
+
+.left-content input {
     margin-bottom: 1rem;
     padding: 1rem;
 
 }
 
-.right-content textarea {
+
+.left-content textarea {
     height: 22vh;
     resize: none;
     padding: 1rem;
 }
 
-.right-content textarea, .right-content input {
+.left-content textarea, .left-content input {
     width: 100%;
     border-radius: 6px;
     border: 1px solid #202020;
 }
 
 
-/* Estilizando lado esquerdo do formulário*/
+/* Estilizando lado direito do formulário*/
 
-.left-content {
-    margin-top: 2rem;
+.right-content {
+    margin-top: 1rem;
+    margin-bottom: 2rem;
 }
 
 .checkboxs {
@@ -79,8 +129,17 @@ span {
 }
 
 .checkboxs input{
-    zoom: 2.5;
+    padding: 1rem;
     vertical-align:middle;
+    border: 1px solid #202020;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.checkboxs input:checked, .prChecklist input:checked {
+    background-color: #3968fc;
+    color: #ffffff;
+    border-color: #3968fc;
 }
 
 
@@ -90,26 +149,32 @@ span {
     vertical-align:middle;
 }
 
-.left-content select{
+.right-content select{
     margin-bottom: 1rem;
     padding: 1rem;
     width: 100%;
     border-radius: 6px;
+    -moz-appearance: none; 
+	-webkit-appearance: none; 
+	appearance: none;
 }
 
 .tags input[type=text] {
-    width: 80%;
+    font-size: 16px;
+    width: 100%;
     border-radius: 6px;
     border: 1px solid #202020;
     padding: 1rem;
+    padding-right: 50px;
 }
 
 .tags input[type=button] {
+    position: relative;
     text-align: center;
     align-items: center;
-    width: 18%;
-    margin-left: 0.3rem;
-    padding: 1rem;
+    width: 10%;
+    margin-left: -3rem;
+    height: 2rem;
     border-radius: 4px;
     border: none;
     background-color: #3968fc;
@@ -123,6 +188,7 @@ span {
     cursor: pointer;
 
     transition: all 0.2s;
+
 }
 
 .tags input[type=button]:hover {
@@ -165,7 +231,6 @@ span {
 }
 
 
-
 .submit-button {
     width: 100%;
     padding: 2rem;
@@ -175,6 +240,7 @@ span {
     background-color: #48cafe;
 
     margin-top: 1rem;
+    margin-bottom: 0.5rem;
     cursor: pointer;
     transition: all 0.2s;
 
@@ -186,6 +252,38 @@ span {
 .submit-button:hover {
     filter: brightness(0.9);
 }
+
+/*Estilização em telas menores*/
+
+@media only screen and (max-width: 1000px) {
+    html {
+        font-size: 80%
+    }
+
+    .normalPreview {
+        display: none;
+    }
+    
+    .mbPreview {
+        display: block;
+    }
+    
+    .container {
+        max-width: 600px;
+    }
+    .container form {
+        flex: 1;
+        
+        display: flex;
+        flex-direction: column;
+    }
+
+    .tags input[type=button] {
+        margin-left: -4rem;
+        max-width: 2.5rem;
+    }
+}
+
 
 
 
