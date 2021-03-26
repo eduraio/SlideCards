@@ -1,0 +1,196 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+
+    background-color: #f2f2f2;
+}
+
+body, input, textarea, button {
+    font-family: 'Ubuntu', sans-serif;
+    font-weight: 400;
+}
+
+h1 {
+    font-size: 5rem;
+    color: #48cafe;
+}
+
+span {
+    margin-bottom: 0.4rem;
+}
+
+.container {
+    height: 100vh;
+    max-width: 992px;
+    margin: 0 auto;
+    padding: 2.5rem 2rem;
+
+    display: flex;
+    flex-direction: column;
+}
+
+.container form {
+    flex: 1;
+    
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6.25rem;
+    align-content: center;
+    justify-content: center;
+}
+
+.right-content, .left-content {
+    display: flex;
+    flex-direction: column;
+}
+
+.right-content input {
+    margin-bottom: 1rem;
+    padding: 1rem;
+
+}
+
+.right-content textarea {
+    height: 22vh;
+    resize: none;
+    padding: 1rem;
+}
+
+.right-content textarea, .right-content input {
+    width: 100%;
+    border-radius: 6px;
+    border: 1px solid #202020;
+}
+
+
+/* Estilizando lado esquerdo do formulário*/
+
+.left-content {
+    margin-top: 2rem;
+}
+
+.checkboxs {
+    margin-bottom: 1rem;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    text-align: center;
+}
+
+.checkboxs input{
+    zoom: 2.5;
+    vertical-align:middle;
+}
+
+
+.checkboxs label{
+    margin-left: 0.2rem;
+    margin-right: 0.6rem;
+    vertical-align:middle;
+}
+
+.left-content select{
+    margin-bottom: 1rem;
+    padding: 1rem;
+    width: 100%;
+    border-radius: 6px;
+}
+
+.tags input[type=text] {
+    width: 80%;
+    border-radius: 6px;
+    border: 1px solid #202020;
+    padding: 1rem;
+}
+
+.tags input[type=button] {
+    text-align: center;
+    align-items: center;
+    width: 18%;
+    margin-left: 0.3rem;
+    padding: 1rem;
+    border-radius: 4px;
+    border: none;
+    background-color: #3968fc;
+
+    vertical-align: middle;
+
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #fff;
+
+    cursor: pointer;
+
+    transition: all 0.2s;
+}
+
+.tags input[type=button]:hover {
+    filter: brightness(0.9);
+}
+
+.tags button span {
+    color: #ffffff;
+    margin: 0 auto;
+}
+
+
+.customTags {
+    display: flex;
+    flex-wrap: wrap;
+
+}
+
+.tagLabel {
+    padding: 0.4rem;
+    border-radius: 4px;
+
+    font-size: 0.8rem !important;
+
+    background-color: #ffffff;
+    border: 1px solid #202020;
+
+    margin: 0.4rem;
+
+    transition: all 0.2s;
+    word-wrap: break-word;
+
+    cursor: pointer;
+
+    transition: all 0.2s;
+}
+
+.tagLabel:hover {
+    filter: brightness(0.9);
+}
+
+
+
+.submit-button {
+    width: 100%;
+    padding: 2rem;
+    border-radius: 4px;
+    border: none;
+
+    background-color: #48cafe;
+
+    margin-top: 1rem;
+    cursor: pointer;
+    transition: all 0.2s;
+
+    font-weight: 700;
+    color: #ffffff;
+    font-size: 1.5rem;
+}
+
+.submit-button:hover {
+    filter: brightness(0.9);
+}
+
+
+
+
+
+
+
+
