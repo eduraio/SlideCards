@@ -135,7 +135,17 @@ export function App() {
     }
 
     await insertData({name, email, description, options, selected, tags})
-    resetStats()
+    const nameElement = window.document.getElementById("processStatus")!
+
+    if (nameElement !== null)
+        nameElement.style.color = "#00ff00"
+    setProcessing('Sucesso!')
+    setTimeout(() => {
+      if (nameElement !== null)
+        nameElement.style.color = "#202020"
+      resetStats()
+    }, 1000);
+    
   }
 
   return (
@@ -221,7 +231,7 @@ export function App() {
             <NewCardModal name={name} email={email} description={description} selected={selected} options={options} tags={tags} />
           </div>
           <button className='submit-button'>Enviar</button>
-          <span>{processing}</span>
+          <span id="processStatus">{processing}</span>
 
         </div>
       </form>
