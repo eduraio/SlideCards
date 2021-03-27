@@ -56,7 +56,7 @@ async function createCard(props:insertDataProps, listId:string) {
 async function addLabelToCard(cardId:string, labels:string[]) {
 
     for (let i = 0; i < labels.length; i++) {
-        await axios.post(`${baseURL}cards/${cardId}/idLabels?key=${key}&token=${token}&value=${labels[i]}`).then( data => console.log(data))
+        await axios.post(`${baseURL}cards/${cardId}/idLabels?key=${key}&token=${token}&value=${labels[i]}`).then( data => {})
     } 
 }
 
@@ -72,7 +72,6 @@ async function createCheckList(cardId:string) {
 
 async function addChecklistItens(checklistId:string, options:optionsProps[]) {
     options.forEach(async op => {
-        console.log(op)
         await axios.post(`${baseURL}checklists/${checklistId}/checkItems?key=${key}&token=${token}&name=${op.name}&checked=${op.status}`).then( data => {})
     })
 }

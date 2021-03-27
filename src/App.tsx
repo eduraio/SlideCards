@@ -2,8 +2,6 @@ import './styles/global.css'
 import { insertData } from './api/connection'
 import {useState} from 'react';
 
-import { NewCardModal } from './components/newCard'
-
 // Array para inicializar estado dos checkbox
 const defaultOption = [
   {
@@ -29,14 +27,15 @@ export function App() {
   const [ email, setEmail ] = useState('')
   const [ description, setDescription ] = useState('')
   const [ options, setOptions ] = useState(defaultOption)
-  const [ selected, setSelected ] = useState('Planejamento')
+  const [ selected, setSelected ] = useState('Selecione...')
   const [ tags, setTags ] = useState<string[]>([])
 
   // estados de verificação
   const [ newTag, setNewTag] = useState('')
-  const [ invalidName, setInvalidName] = useState('*')
-  const [ invalidEmail, setInvalidEmail] = useState('*')
-  const [ processing, setProcessing] = useState('')
+  const [ invalidName, setInvalidName] = useState('')
+  const [ invalidEmail, setInvalidEmail] = useState('')
+  const [ invalidSelected, setInvalidSelected] = useState('')
+  const [ processing, setProcessing] = useState('Confirmar envio?')
 
   function handleNewOption(e:any) {
 
@@ -65,14 +64,30 @@ export function App() {
     setTags(newTagsArray)
   }
 
+  function changeSelected() {
+    const nameElement = window.document.getElementById("selecId")!.getElementsByTagName("option")!
+
+    if (nameElement !== null) {
+      for (var i = 0; i < nameElement.length; i++) {
+        if (nameElement[i].value.toLowerCase() === "selecione...") {
+          nameElement[i].disabled = false ;
+          setSelected('Selecione...')
+          nameElement[i].disabled = true ;
+        }
+      }
+    }
+    
+  }
+
   function resetStats() {
     setName('')
     setEmail('')
     setDescription('')
-    setSelected('Planejamento')
     setTags([])
     setNewTag('')
-    setProcessing('')
+    setProcessing('Confirmar envio?')
+
+    changeSelected()
 
     const newOptionsArray = options.map(option => {
         option.status = false
@@ -88,9 +103,9 @@ export function App() {
       const nameElement = window.document.getElementById("nameInput")!
 
       if (nameElement !== null)
-        nameElement.style.border = "1px solid red"
+        nameElement.style.borderBottom = "1px solid red"
 
-      setTimeout(() => { nameElement.style.border = "1px solid #202020"}, 5000);
+      setTimeout(() => { nameElement.style.borderBottom = "1px solid #202020"}, 5000);
       setInvalidName('( Este campo é obrigatório )')
       return false
     }
@@ -102,9 +117,9 @@ export function App() {
       const nameElement = window.document.getElementById("emailInput")!
 
       if (nameElement !== null)
-        nameElement.style.border = "1px solid red"
+        nameElement.style.borderBottom = "1px solid red"
       
-      setTimeout(() => { nameElement.style.border = "1px solid #202020" }, 5000);
+      setTimeout(() => { nameElement.style.borderBottom = "1px solid #202020" }, 5000);
       setInvalidEmail('( Este campo é obrigatório )')
       return false
     } 
@@ -113,126 +128,167 @@ export function App() {
         const nameElement = window.document.getElementById("emailInput")!
 
         if (nameElement !== null)
-          nameElement.style.border = "1px solid red"
+          nameElement.style.borderBottom = "1px solid red"
         
-        setTimeout(() => { nameElement.style.border = "1px solid #202020" }, 5000);
-        setInvalidEmail('( E-mail inváido )')
+        setTimeout(() => { nameElement.style.borderBottom = "1px solid #202020" }, 5000);
+        setInvalidEmail('( E-mail inválido )')
+        return false
+    }
+
+    if ( selected === 'Selecione...') {
+      const nameElement = window.document.getElementById("selecId")!
+
+      if (nameElement !== null)
+          nameElement.style.borderBottom = "1px solid red"
+        
+        setTimeout(() => { nameElement.style.borderBottom = "1px solid #202020" }, 5000);
+        setInvalidSelected('( Selecione uma opção )')
+
         return false
     }
     return true
   }
 
-  async function createNewCard(e:any) {
+  async function confirmed() {
     setProcessing('Enviando dados...')
+    await insertData({name, email, description, options, selected, tags})
+    resetStats()
+    hideButtons()
+  }
+
+  function denied() {
+    hideButtons()
+  }
+
+  function showButtons() {
+    const envButton = window.document.getElementById("envButton")!
+    const confirmation  = window.document.getElementById("confirmation")!
+
+    envButton.className= "disableButton"
+    confirmation.style.display = "block"
+  }
+
+  function hideButtons() {
+    const envButton = window.document.getElementById("envButton")!
+    const confirmation  = window.document.getElementById("confirmation")!
+
+    envButton.className = "envButton"
+    confirmation.style.display = "none"
+  }
+
+  async function createNewCard(e:any) {
     e.preventDefault()
 
     const validateFields = checkFields()
 
-    if (!validateFields){
-      setProcessing('Por favor, verifique os campos obrigatórios.')
-      setTimeout(() => { setProcessing('') }, 3000);
-      return
-    }
+    if (!validateFields) return
+    showButtons()
 
-    await insertData({name, email, description, options, selected, tags})
-    const nameElement = window.document.getElementById("processStatus")!
-
-    if (nameElement !== null)
-        nameElement.style.color = "#00ff00"
-    setProcessing('Sucesso!')
-    setTimeout(() => {
-      if (nameElement !== null)
-        nameElement.style.color = "#202020"
-      resetStats()
-    }, 1000);
-    
   }
 
   return (
     <div className="container">
-
-      <div className="header">
-        <div>
-          <h1>SlideCards</h1>
-          <span>Insira novas informações na <a target="_blanck" href="https://trello.com/b/XWaXCkAj/slidecards">lista do Trello.</a></span>
-        </div>
-
-        <div className="normalPreview">
-            <NewCardModal name={name} email={email} description={description} selected={selected} options={options} tags={tags} />
-          </div>
-      </div>
-
       <form action="" noValidate onSubmit={(e) => createNewCard(e)}>
+        <div className="preview">
 
-        <div className="left-content">
-
-          <span data-end={invalidName} >Nome </span>
-
-          <input type="text" id="nameInput" value={name} placeholder="Nome" onChange={(e) => {
-            setName(e.target.value)
-            setInvalidName('*')
-          }}/>
-
-          <span data-end={invalidEmail}>E-mail </span>
-
-          <input id="emailInput" type="email" value={email} placeholder="E-mail" onChange={(e) => {
-            setEmail(e.target.value)
-            setInvalidEmail('*')
-          }}/>
-
-          <span>Descrição</span>
-
-          <textarea placeholder="Escreva alguma coisa." value={description} onChange={(e) => setDescription(e.target.value)}></textarea>
-
-        </div>
-
-        <div className="right-content">
-
-          <div className="checkboxs">
-
-            <div>
-              <input type="checkbox" id="Iniciado" checked={options[0].status} name="Iniciado" value="Iniciado" onChange={(e) => handleNewOption(e)}/>
-              <label htmlFor="Iniciado">Iniciado</label>
-            </div>
-
-
-            <div>
-              <input type="checkbox" id="Produzido" name="Produzido" checked={options[1].status} value="Produzido" onChange={(e) => handleNewOption(e)}/>
-              <label htmlFor="Produzido">Produzido</label>
-            </div>
-
-            <div>
-              <input type="checkbox"  id="Revisado" name="Revisado" checked={options[2].status} value="Revisado" onChange={(e) => handleNewOption(e)}/>
-              <label htmlFor="Revisado">Revisado</label>
-            </div>
+          {/* Estilização parte superior */}
+          <div className="title">
+            <h1>SlideCards</h1>
+            <span>Insira novas informações na <a target="_blanck" href="https://trello.com/b/XWaXCkAj/slidecards">lista do Trello.</a></span>
           </div>
-          
-          <span>Status ( Selecione )</span>
-          <select name="option" value={selected} onChange={(e) => setSelected(e.target.value)}>
-            <option value="Planejamento">Planejamento</option>
-            <option value="Produção">Produção</option>
-            <option value="Finalizado">Finalizado</option>
-          </select>
+
+          {/* Estilização meio */}
+          <div className="content">
+
+            <div className="errorMessage">
+              <span>{invalidName}</span>
+              <span>{invalidEmail}</span>
+            </div>
+
+            <div className="inputText">
+              <input type="text" value={name} id="nameInput" placeholder="Nome" onChange={(e) => {
+                setName(e.target.value)
+                setInvalidName('')
+              }}/> 
+              <input type="email" value={email} id="emailInput" placeholder="E-mail"onChange={(e) => {
+                setEmail(e.target.value)
+                setInvalidEmail('')
+              }}/>
+            </div>
+
+            <div className="tags">
+              <div>
+                <span>Tags</span>
+              </div>
+              <div>
+                <div className="customTags">
+                  {tags.map(tag => {
+                    return <label key={tag} className="TagLabel" onClick={(e) => handleRemoveTag(e)}>{tag}</label>
+                  })}
+                  <div>
+                    <input type="button" value='+' onClick={(e) => handleTags()} />
+                    <input type="text" value={newTag} maxLength={25} placeholder="Add TAG" onChange={(e) => setNewTag(e.target.value)}/>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+            <span className="progessSpan">Progresso</span>
+
+            <div className="checklist">
+              <div>
+                <input type="checkbox" id="Iniciado" checked={options[0].status} name="Iniciado" onChange={(e) => handleNewOption(e)}/>
+                <label htmlFor="Iniciado">Iniciado</label>
+              </div>
 
 
-          <span>Tags ( Clique para remover )</span>
-          <div className="tags">
-            <input type="text" value={newTag} placeholder="Adicionar nova TAG" onChange={(e) => setNewTag(e.target.value)}/>
-            <input type="button" value='+' onClick={(e) => handleTags()}/>
-            <div>
-              <div className="customTags">
-                {tags.map(tag => {
-                  return <label  key={tag} className="tagLabel" onClick={(e) => handleRemoveTag(e)} >{tag}</label>
-                })}
+              <div>
+                <input type="checkbox" id="Produzido" checked={options[1].status} name="Produzido"  onChange={(e) => handleNewOption(e)} />
+                <label htmlFor="Produzido">Produzido</label>
+              </div>
+
+              <div>
+                <input type="checkbox"  id="Revisado" checked={options[2].status} name="Revisado"  onChange={(e) => handleNewOption(e)}/>
+                <label htmlFor="Revisado">Revisado</label>
+              </div>
+            </div>
+
+            <div className="description">
+              <span>Descrição</span>
+              <textarea value={description} placeholder="Escreva alguma coisa." onChange={(e) => setDescription(e.target.value)} />
+            </div>
+
+            <div className="errorMessage">
+            <span></span>
+              <span>{invalidSelected}</span>
+            </div>
+            <div className="selection">
+              <span>Status</span>
+              <select id="selecId" name="option" value={selected} onChange={(e) => {
+                setSelected(e.target.value)
+                setInvalidSelected('')
+              }}>
+                <option value="Selecione..." disabled >Selecione...</option>
+                <option value="Planejamento">Planejamento</option>
+                <option value="Produção">Produção</option>
+                <option value="Finalizado">Finalizado</option>
+              </select>
+            </div>
+
+          </div>
+
+          {/* Estilização parte inferior */}
+          <div className="bottom">
+            <button className="envButton" id="envButton">Enviar</button>
+            <div id="confirmation" className="confirmation">
+              <span id="spanConfirmation">{processing}</span>
+              <div>
+                <input type="button" value="Cancelar" onClick={(e) => denied()} />
+                <input type="button" value="Confirmar" onClick={(e) => confirmed()}/>
               </div>
             </div>
           </div>
-          <div className="mbPreview">
-            <NewCardModal name={name} email={email} description={description} selected={selected} options={options} tags={tags} />
-          </div>
-          <button className='submit-button'>Enviar</button>
-          <span id="processStatus">{processing}</span>
-
         </div>
       </form>
     </div>
