@@ -218,7 +218,7 @@ export function App() {
 
             <div className="tags">
               <div>
-                <span>Tags</span>
+                <span>Tags ( Clique para remover )</span>
               </div>
               <div>
                 <div className="customTags">
@@ -226,8 +226,8 @@ export function App() {
                     return <label key={tag} className="TagLabel" onClick={(e) => handleRemoveTag(e)}>{tag}</label>
                   })}
                   <div>
-                    <input type="button" value='+' onClick={(e) => handleTags()} />
                     <input type="text" value={newTag} maxLength={25} placeholder="Add TAG" onChange={(e) => setNewTag(e.target.value)}/>
+                    <input type="button" value='+' onClick={(e) => handleTags()} />
                   </div>
                 </div>
               </div>

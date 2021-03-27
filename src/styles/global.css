@@ -131,7 +131,7 @@ h1 {
 
 .tags div span {
     margin-right: 1rem;
-    font-size: 1.4rem;
+    font-size: 1rem;
     max-width: 10%;
 }
 
@@ -174,7 +174,7 @@ h1 {
     border: none;
     background-color: #3968fc;
 
-    margin-left: 0.5rem;
+    margin-left: 0.1rem;
 
     font-size: 0.8rem;
     font-weight: 700;
@@ -225,7 +225,7 @@ h1 {
 }
 
 .selection span {
-    font-size: 1.4rem;
+    font-size: 1rem;
     max-width: 15%;
     vertical-align: middle;
     padding: 0.2rem;
@@ -258,7 +258,7 @@ h1 {
 
 .progessSpan {
     margin-left: 1rem;
-    font-size: 1.4rem;
+    font-size: 1rem;
 }
 
 .checklist {
@@ -306,7 +306,7 @@ h1 {
 
 .description span {
     display: block;
-    font-size: 1.4rem;
+    font-size: 1rem;
     padding: 0.2rem;
 }
 
@@ -366,7 +366,7 @@ h1 {
 }
 
 .confirmation span {
-    font-size: 1.4rem;
+    font-size: 1rem;
 }
 
 .confirmation div{
@@ -406,6 +406,13 @@ h1 {
 @media only screen and (max-width: 1000px) {
     html {
         font-size: 80%
+    }
+
+    .inputText {
+        display: block
+    }
+    .errorMessage {
+        display: block;
     }
 }
 
