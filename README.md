@@ -13,7 +13,9 @@ O formulário simula o cadastro de um novo projeto informando nome/e-mail de que
 
 Também simulando um formulário real e preenchendo o pedido *Máscara e validação dos campos*, os campos obrigatórios são:
 > Nome
+
 > E-mail ( Com validação de formato usando Regex )
+
 > Status
 ### Capturas de Tela
 **DESKTOP** |  **Mobile**
