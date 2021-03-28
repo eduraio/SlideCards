@@ -19,6 +19,7 @@ interface insertDataProps {
     tags:string[]
 }
 
+// Função que cria novas labels na lista.
 async function createLabels(labels:string[]) {
 
     if (labels.length === 0) return []
@@ -35,6 +36,7 @@ async function createLabels(labels:string[]) {
     return labelsIds
 }
 
+// Função que cria uma nova lista
 async function createList(name:string) {
     const response = await axios.post(`${baseURL}boards/${id}/lists?key=${key}&token=${token}&name=${name}`).then( data => {
         return data.data
@@ -43,6 +45,7 @@ async function createList(name:string) {
     return response.id
 }
 
+// Função que cria um novo card na lista
 async function createCard(props:insertDataProps, listId:string) {
 
     const cardName = `${props.email} ( ${props.selected} )`
@@ -53,6 +56,8 @@ async function createCard(props:insertDataProps, listId:string) {
     return response.id
 }
 
+// Função que adiciona as labels criadas no card.
+
 async function addLabelToCard(cardId:string, labels:string[]) {
 
     for (let i = 0; i < labels.length; i++) {
@@ -60,6 +65,8 @@ async function addLabelToCard(cardId:string, labels:string[]) {
     } 
 }
 
+
+// Função que cria o checklist
 async function createCheckList(cardId:string) {
 
     const response = await axios.post(`${baseURL}checklists?key=${key}&token=${token}&idCard=${cardId}`).then( data => {
@@ -69,7 +76,7 @@ async function createCheckList(cardId:string) {
     return response.id
 }
 
-
+// Função que adiciona o checklist criado no card
 async function addChecklistItens(checklistId:string, options:optionsProps[]) {
     options.forEach(async op => {
         await axios.post(`${baseURL}checklists/${checklistId}/checkItems?key=${key}&token=${token}&name=${op.name}&checked=${op.status}`).then( data => {})

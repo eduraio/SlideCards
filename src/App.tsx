@@ -37,6 +37,8 @@ export function App() {
   const [ invalidSelected, setInvalidSelected] = useState('')
   const [ processing, setProcessing] = useState('Confirmar envio?')
 
+  // funções que alteram o estado
+
   function handleNewOption(e:any) {
 
     // Inverte checked status dos checkbox
@@ -149,6 +151,7 @@ export function App() {
     return true
   }
 
+  // função que aciona conexão caso envio seja confirmado
   async function confirmed() {
     setProcessing('Enviando dados...')
     await insertData({name, email, description, options, selected, tags})
@@ -156,10 +159,12 @@ export function App() {
     hideButtons()
   }
 
+  // função que vokta o botao enviar caso seja cancelado o envio
   function denied() {
     hideButtons()
   }
 
+  // função que mostra os botoes de confirmar cancelar quando pressionado botao enviar
   function showButtons() {
     const envButton = window.document.getElementById("envButton")!
     const confirmation  = window.document.getElementById("confirmation")!
@@ -168,6 +173,7 @@ export function App() {
     confirmation.style.display = "block"
   }
 
+  // função que esconde os botoes de confirmar cancelar quando pressionado botao enviar
   function hideButtons() {
     const envButton = window.document.getElementById("envButton")!
     const confirmation  = window.document.getElementById("confirmation")!
@@ -176,6 +182,7 @@ export function App() {
     confirmation.style.display = "none"
   }
 
+  // função que valida campos antes de tentar crar novo card
   async function createNewCard(e:any) {
     e.preventDefault()
 
