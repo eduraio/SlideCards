@@ -2,8 +2,9 @@
 Um site feito em React para o desafio da SlideWorks.
 O site consiste em um formulário para adiconar novos Cards em uma lista do Trello.
 
-Disponível em https://slidecards.vercel.app
-Lista em que o formulário adiciona novos cards: https://trello.com/b/XWaXCkAj/slidecards
+> Disponível em https://slidecards.vercel.app
+
+> Lista em que o formulário adiciona novos cards: https://trello.com/b/XWaXCkAj/slidecards
 
 ### Informações
 
